@@ -1,11 +1,18 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Documentation endpoint
+app.get('/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'docs.html'));
+});
 
 // In-memory data store (in a real app, you'd use a database)
 let users = [
@@ -23,6 +30,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       'GET /': 'This message',
+      'GET /docs': 'API documentation (HTML)',
       'GET /users': 'Get all users',
       'GET /users/:id': 'Get a specific user',
       'POST /users': 'Create a new user',
